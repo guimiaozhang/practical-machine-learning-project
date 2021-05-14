@@ -2,7 +2,7 @@
 
 ## rmd/html file is names as project.rmd/html
 
-## compiled html file can be seen here https://guimiaozhang.github.io/practical-machine-learning-project/
+## compiled html file can be seen [here](https://guimiaozhang.github.io/practical-machine-learning-project/)
 
 Background
 
