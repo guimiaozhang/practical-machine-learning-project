@@ -183,7 +183,11 @@ pre code {
 </div>
 <div id="data-loading" class="section level2">
 <h2>Data loading</h2>
-<pre class="r"><code>train &lt;- &#39;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv&#39;
+<pre class="r"><code>library(caret)
+library(class)
+library(mclust)
+library(dplyr)
+train &lt;- &#39;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv&#39;
 test &lt;- &#39;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv&#39;
 if (!file.exists(&#39;data&#39;)) {dir.create(&#39;data&#39;)}
 if (!file.exists(&#39;data/train.csv&#39;)) {download.file(train, destfile = &#39;data/train.csv&#39;)}
@@ -232,7 +236,6 @@ which(colnames(dat) == &#39;classe&#39;)</code></pre>
 <div id="spliting-the-training-cases-into-training-set-validating-set" class="section level4">
 <h4>Spliting the training cases into training set &amp; validating set</h4>
 <pre class="r"><code>set.seed(4)
-library(caret)
 # split dataset into training : validating = 7:3
 validates &lt;- createDataPartition(y = dat$classe, p = 0.3, list = F)
 training &lt;- dat[!validates, ]
@@ -303,7 +306,6 @@ valres1$overall[&#39;Accuracy&#39;]</code></pre>
 <div id="k-nearest-neighbor" class="section level4">
 <h4>K-nearest neighbor</h4>
 <pre class="r"><code># knn
-library(class)
 ks &lt;- seq(1, 21, 2) # try to tune the number of nearest neighbor
 tacc &lt;- c(); vacc &lt;- c()
 for(i in 1:length(ks)) {
@@ -331,8 +333,7 @@ valspred2 &lt;- knn(trains[, -1], vals[, -1], trains$classe, k = 1)</code></pre>
 <div id="majority-vote" class="section level4">
 <h4>Majority vote</h4>
 <p>As different machine learning algorithm may classify the activities into different labels, simple majority vote is adopted here.</p>
-<pre class="r"><code>library(mclust)
-dftrain &lt;- data.frame(trainpred, trainpred1, trainpred2)
+<pre class="r"><code>dftrain &lt;- data.frame(trainpred, trainpred1, trainpred2)
 dfval &lt;- data.frame(valspred, valspred1, valspred2)
 tvotepred &lt;- apply(dftrain, 1, majorityVote) %&gt;% simplify2array
 vvotepred &lt;- apply(dfval, 1, majorityVote) %&gt;% simplify2array
@@ -356,17 +357,6 @@ Accuracies vs Algorithms
 </p>
 </div>
 <p>From figure , we can see that for this specific dataset, SVM model built here does not works well.</p>
-<pre class="r"><code>my_tbl &lt;- tibble::tribble(
-  ~accuracy, ~training, ~validating,
-      &quot;random forest&quot;, 0.9594213,   0.9696043,
-                &quot;svm&quot;, 0.8750352,   0.8731533,
-                &quot;knn&quot;,         1,    0.984038,
-      &quot;majority vote&quot;,         1,   0.9726609
-  )
-
-require(knitr)
-kable(my_tbl, digits = 4, row.names = FALSE, align = &quot;c&quot;,
-              caption = &#39;Accuracies for different algorithms on training set &amp; validating set&#39;)</code></pre>
 <table>
 <caption>Accuracies for different algorithms on training set &amp; validating set</caption>
 <thead>
