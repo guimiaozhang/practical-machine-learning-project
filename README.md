@@ -2,7 +2,7 @@
 
 ## rmd/html file is names as project.rmd/html
 
-## index.html is the file that I tried to make it easier for reading.
+## compiled html file can be seen here https://guimiaozhang.github.io/practical-machine-learning-project/
 
 Background
 
